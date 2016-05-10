@@ -1,0 +1,13 @@
+<?php
+/**
+ * Lastlogin configuration file.
+ */
+
+// Default number of seconds to show the lastlogin info at login.
+$config['lastlogin_timeout'] = 10;
+
+// Number of entries to show in user login history.
+$config['lastlogin_lastrecords'] = 10;
+
+// Use geolocation plugin.
+$config['lastlogin_geolocation'] = true;
