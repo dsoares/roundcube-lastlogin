@@ -163,7 +163,7 @@ class lastlogin extends rcube_plugin
         $geo = $this->get_geo($ip);
         $dns = $this->get_dns($ip);
 
-        $sql = "INSERT INTO " . $this->log_table .
+        $sql = "INSERT INTO " . $this->table_name() .
             "(id, user_id, username, session_id, ip, real_ip, hostname, geoloc) ".
             "VALUES (\N, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -184,7 +184,7 @@ class lastlogin extends rcube_plugin
     {
         $sql = "SELECT if(real_ip!='',real_ip,ip) AS `from`, hostname, ".
             "UNIX_TIMESTAMP(timestamp) AS `date`, geoloc AS `geo` FROM " .
-            $this->log_table . " WHERE user_id=? ORDER BY id DESC LIMIT " .
+            $this->table_name() . " WHERE user_id=? ORDER BY id DESC LIMIT " .
             $this->rc->config->get('lastlogin_lastrecords', 10);
         $sth = $this->rc->db->query($sql,  $this->rc->user->ID);
 
@@ -400,5 +400,13 @@ class lastlogin extends rcube_plugin
         }
 
         return $this->rc->format_date($date, "$weekday, d F Y, H:i");
+    }
+
+    /**
+     * Get table name.
+     */
+    private function table_name()
+    {
+        return $this->rc->db->table_name($this->log_table, true);
     }
 }
