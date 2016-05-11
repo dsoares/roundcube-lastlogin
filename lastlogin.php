@@ -157,17 +157,17 @@ class lastlogin extends rcube_plugin
             return $args;
         }
 
-        $session_id = session_id();
+        $sess_id = session_id();
         $ips = $this->remote_ip();
         $ip  = $this->remote_ip('single');
         $geo = $this->get_geo($ip);
         $dns = $this->get_dns($ip);
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(user_id, username, session_id, ip, real_ip, hostname, geoloc) ".
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc) ".
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-        $ret = $this->rc->db->query($sql,  $user_id, $username, $session_id,
+        $ret = $this->rc->db->query($sql,  $user_id, $username, $sess_id,
             $ips['ip'], $ips['forwarded_ip'], $dns, $geo);
 
         if ($ret) {
