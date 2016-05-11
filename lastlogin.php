@@ -164,8 +164,8 @@ class lastlogin extends rcube_plugin
         $dns = $this->get_dns($ip);
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(id, user_id, username, session_id, ip, real_ip, hostname, geoloc) ".
-            "VALUES (\N, ?, ?, ?, ?, ?, ?, ?);";
+            "(user_id, username, session_id, ip, real_ip, hostname, geoloc) ".
+            "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         $ret = $this->rc->db->query($sql,  $user_id, $username, $session_id,
             $ips['ip'], $ips['forwarded_ip'], $dns, $geo);
@@ -183,8 +183,8 @@ class lastlogin extends rcube_plugin
     public function load_log()
     {
         $sql = "SELECT if(real_ip!='',real_ip,ip) AS `from`, hostname, ".
-            "UNIX_TIMESTAMP(timestamp) AS `date`, geoloc AS `geo` FROM " .
-            $this->table_name() . " WHERE user_id=? ORDER BY id DESC LIMIT " .
+            $this->unixtimestamp('timestamp') . " AS `date`, geoloc AS `geo` FROM " .
+            $this->table_name() . " WHERE user_id = ? ORDER BY id DESC LIMIT " .
             $this->rc->config->get('lastlogin_lastrecords', 10);
         $sth = $this->rc->db->query($sql,  $this->rc->user->ID);
 
@@ -384,6 +384,28 @@ class lastlogin extends rcube_plugin
         }
 
         return $geo;
+    }
+
+    /**
+     * Return SQL statement to convert a field value into a unix timestamp.
+     */
+    private function unixtimestamp($field)
+    {
+        $ts = '';
+
+        switch ($this->rc->db->db_provider) {
+        case 'pgsql':
+        case 'postgres':
+            $ts = "EXTRACT (EPOCH FROM $field)";
+            break;
+        case 'sqlite':
+            $ts = "strftime('%s', $field)";
+            break;
+        default:
+            $ts = "UNIX_TIMESTAMP($field)";
+        }
+
+        return $ts;
     }
 
     /**
