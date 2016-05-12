@@ -65,9 +65,8 @@ class lastlogin extends rcube_plugin
      */
     public function render_page($args)
     {
-            $this->show_info();
-            $this->save_info();
-
+        $this->show_info();
+        $this->save_info();
         $this->unset_flag();
         return $args;
     }
