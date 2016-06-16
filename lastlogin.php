@@ -163,11 +163,11 @@ class lastlogin extends rcube_plugin
         $tor = $this->is_tor($ip);
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc) ".
-            "VALUES (?, ?, ?, ?, ?, ?, ?);";
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, tor) ".
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         $ret = $this->rc->db->query($sql,  $user_id, $username, $sess_id,
-            $ips['ip'], $ips['forwarded_ip'], $dns, $geo);
+            $ips['ip'], $ips['forwarded_ip'], $dns, $geo, $tor);
 
         if ($ret) {
             $args['abort'] = false;
