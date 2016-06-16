@@ -14,3 +14,13 @@ $config['lastlogin_geolocation'] = true;
 
 // Resolve names with DNS (boolean).
 $config['lastlogin_dns'] = true;
+
+// Check if IP is a TOR-network exit point (boolean).
+$config['lastlogin_tor'] = true;
+
+// TOR-network DNS suffix
+$config['lastlogin_tor_suffix'] = ".ip-port.exitlist.torproject.org";
+
+// TOR-network IP
+$config['lastlogin_tor_ip'] = "127.0.0.2";
+
