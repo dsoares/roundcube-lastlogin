@@ -361,8 +361,14 @@ class lastlogin extends rcube_plugin
      */
     private function get_dns($ip)
     {
-        $dns = (intval($ip) ? gethostbyaddr($ip) : '');
-        return ($dns != $ip ? $dns : '');
+        if ($this->rc->config->get('lastlogin_dns', true)) {
+            $dns = (intval($ip) ? gethostbyaddr($ip) : '');
+            if ($dns != $ip) {
+                return $dns;
+            }
+        }
+
+        return '';
     }
 
     /**

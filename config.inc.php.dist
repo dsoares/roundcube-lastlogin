@@ -9,5 +9,8 @@ $config['lastlogin_timeout'] = 10;
 // Number of entries to show in user login history.
 $config['lastlogin_lastrecords'] = 10;
 
-// Use geolocation plugin.
+// Use geolocation plugin (boolean).
 $config['lastlogin_geolocation'] = true;
+
+// Resolve names with DNS (boolean).
+$config['lastlogin_dns'] = true;
