@@ -160,6 +160,7 @@ class lastlogin extends rcube_plugin
         $ip  = $this->remote_ip('single');
         $geo = $this->get_geo($ip);
         $dns = $this->get_dns($ip);
+        $tor = $this->is_tor($ip);
 
         $sql = "INSERT INTO " . $this->table_name() .
             "(user_id, username, sess_id, ip, real_ip, hostname, geoloc) ".
@@ -388,6 +389,30 @@ class lastlogin extends rcube_plugin
         }
 
         return $geo;
+    }
+
+    /**
+     * Check if IP is a TOR-network exit point.
+     */
+    private function is_tor($ip)
+    {
+        if ($this->rc->config->get('lastlogin_tor', true)) {
+	    $ip = $this->reverse_ip_octets($ip).
+		".".$_SERVER['SERVER_PORT'].
+		".".$this->reverse_ip_octets($_SERVER['SERVER_ADDR']).
+		$this->rc->config->get('lastlogin_tor_suffix', ".ip-port.exitlist.torproject.org");
+	    $tor_ip = $this->rc->config->get('lastlogin_tor_ip', "127.0.0.2");
+	    return (gethostbyname($ip) == $tor_ip);
+	}
+	return false;
+    }
+
+    /**
+     * Reverse the octets of an IP.
+     */
+    private function reverse_ip_octets($ip)
+    {
+	return implode('.', array_reverse(explode('.', $ip)));
     }
 
     /**
