@@ -25,7 +25,8 @@ CREATE TABLE userlogins (
     "ip" varchar(20) DEFAULT '' NOT NULL,
     "real_ip" varchar(20) DEFAULT '' NOT NULL,
     "hostname" varchar(255) DEFAULT '' NOT NULL,
-    "geoloc" varchar(255) DEFAULT '' NOT NULL
+    "geoloc" varchar(255) DEFAULT '' NOT NULL,
+    "tor" boolean NOT NULL DEFAULT FALSE
 );
 
 CREATE INDEX userlogins_user_id_idx ON userlogins (user_id);
