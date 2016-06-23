@@ -181,7 +181,7 @@ class lastlogin extends rcube_plugin
      */
     public function load_log()
     {
-        $sql = "SELECT CASE when real_ip!='' then real_ip else ip end AS \"from\", hostname, ".
+        $sql = "SELECT CASE when real_ip<>'' then real_ip else ip end AS \"from\", hostname, ".
             $this->unixtimestamp('timestamp') . " AS \"date\", geoloc AS \"geo\" FROM " .
             $this->table_name() . " WHERE user_id = ? ORDER BY id DESC LIMIT " .
             $this->rc->config->get('lastlogin_lastrecords', 10);
