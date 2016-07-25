@@ -163,11 +163,11 @@ class lastlogin extends rcube_plugin
         $tor = $this->is_tor($ip);
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, tor) ".
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc".($tor?", tor":"").") ".
+            "VALUES (?, ?, ?, ?, ?, ?, ?".($tor?", TRUE":"").");";
 
-        $ret = $this->rc->db->query($sql,  $user_id, $username, $sess_id,
-            $ips['ip'], $ips['forwarded_ip'], $dns, $geo, $tor);
+        $ret = $this->rc->db->query($sql, $user_id, $username, $sess_id,
+            $ips['ip'], $ips['forwarded_ip'], $dns, $geo);
 
         if ($ret) {
             $args['abort'] = false;
@@ -181,7 +181,7 @@ class lastlogin extends rcube_plugin
      */
     public function load_log()
     {
-        $sql = "SELECT CASE when real_ip<>'' then real_ip else ip end AS \"from\", hostname, ".
+        $sql = "SELECT CASE WHEN real_ip<>'' THEN real_ip ELSE ip END AS \"from\", hostname, ".
             $this->unixtimestamp('timestamp') . " AS \"date\", geoloc AS \"geo\" FROM " .
             $this->table_name() . " WHERE user_id = ? ORDER BY id DESC LIMIT " .
             $this->rc->config->get('lastlogin_lastrecords', 10);
