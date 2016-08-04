@@ -5,7 +5,7 @@
     "keywords": ["mail","login","history"],
     "homepage": "https://github.com/dsoares/Roundcube-Plugin-Lastlogin",
     "license": "GPL-3.0+",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "authors": [
         {
             "name": "Diana Soares",
