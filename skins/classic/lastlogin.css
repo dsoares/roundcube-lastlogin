@@ -1,0 +1,7 @@
+TABLE.lastlogin {border-collapse:collapse;border:1px solid #999;}
+TABLE.lastlogin TH, TABLE.lastlogin TD {padding:4px 8px;border:1px solid #999;white-space:nowrap;}
+TABLE.lastlogin THEAD TH {text-overflow:ellipsis;text-align:left}
+TABLE.lastlogin TD {font-size:95%;}
+.lastlogin_info TABLE.propform TD {background:#fff}
+.lastlogin_info .license {color:#aaa;font-size:90%}
+.lastlogin_info .license a {color:#aaa}

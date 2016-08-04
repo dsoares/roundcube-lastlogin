@@ -297,8 +297,8 @@ class lastlogin extends rcube_plugin
     public function recentlogins()
     {
         $logs = $this->load_log();
-        $table = new html_table(array('cols'=>4, 'class'=>'lastlogin', 'border'=>1,
-            'cellspacing'=>0, 'cellpadding'=>4));
+        $table = new html_table(array('cols'=>4, 'class'=>'lastlogin uibox records-table',
+            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4));
 
         foreach (array('timestamp', 'ip', 'hostname', 'location') as $k) {
             $table->add_header(
