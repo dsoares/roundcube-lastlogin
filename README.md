@@ -8,9 +8,9 @@ When a user logs in into Roundcube, this plugin:
 1. shows the last user login information in a small box for N configurable seconds;
 2. saves the information to a database table for history purposes.
 
-If using the geolocation plugin and you have configured your organization internal networks, that information will be shown. For more information, see the geolocation plugin configuration.
+If using the [geolocation plugin][geolocation] (config option `lastlogin_geolocation` is `true`) and you have some organization internal networks configured there, that information will be shown. For more information, see the [geolocation plugin][geolocation] configuration.
 
-This plugin provides a section in settings for the user to configure the number of seconds to show the information on login.
+The plugin provides a section in settings for the user to configure for how long (number of seconds) to show a notification with last access information on login.
 
 Stable versions of Lastlogin are available from the [Roundcube plugin repository][rcplugrepo] or the [releases section][releases] of the GitHub repository.
 
@@ -19,6 +19,7 @@ Requirements
 ------------
 
 - [Roundcube Plugin Geolocation][geolocation] if the config option `lastlogin_geolocation` is `true` (default).
+- The option `log_logins` in Roundcube main configuration must be enabled to register the logins.
 
 
 Installation with composer
