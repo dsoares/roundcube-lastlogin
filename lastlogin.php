@@ -385,7 +385,9 @@ class lastlogin extends rcube_plugin
         $geo = geolocation::get_instance()->get_geolocation($ip);
 
         if (is_array($geo)) {
-            $geo = sprintf("%s, %s, %s", $geo['city'], $geo['region'], $geo['country']);
+            $geo = array_map('trim', $geo);
+            $geo = array_filter($geo);
+            $geo = implode(', ', $geo);
         }
 
         return $geo;
@@ -397,14 +399,14 @@ class lastlogin extends rcube_plugin
     private function is_tor($ip)
     {
         if ($this->rc->config->get('lastlogin_tor', true)) {
-	    $ip = $this->reverse_ip_octets($ip).
-		".".$_SERVER['SERVER_PORT'].
-		".".$this->reverse_ip_octets($_SERVER['SERVER_ADDR']).
-		$this->rc->config->get('lastlogin_tor_suffix', ".ip-port.exitlist.torproject.org");
-	    $tor_ip = $this->rc->config->get('lastlogin_tor_ip', "127.0.0.2");
-	    return (gethostbyname($ip) == $tor_ip);
-	}
-	return false;
+            $ip = $this->reverse_ip_octets($ip).
+                ".".$_SERVER['SERVER_PORT'].
+                ".".$this->reverse_ip_octets($_SERVER['SERVER_ADDR']).
+                $this->rc->config->get('lastlogin_tor_suffix', ".ip-port.exitlist.torproject.org");
+            $tor_ip = $this->rc->config->get('lastlogin_tor_ip', "127.0.0.2");
+            return (gethostbyname($ip) == $tor_ip);
+        }
+        return false;
     }
 
     /**
@@ -412,7 +414,7 @@ class lastlogin extends rcube_plugin
      */
     private function reverse_ip_octets($ip)
     {
-	return implode('.', array_reverse(explode('.', $ip)));
+        return implode('.', array_reverse(explode('.', $ip)));
     }
 
     /**
