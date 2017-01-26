@@ -22,8 +22,8 @@ CREATE TABLE userlogins (
     "user_id" integer NOT NULL,
     "username" varchar(128) DEFAULT '' NOT NULL,
     "sess_id" varchar(128) DEFAULT '' NOT NULL,
-    "ip" varchar(20) DEFAULT '' NOT NULL,
-    "real_ip" varchar(20) DEFAULT '' NOT NULL,
+    "ip" varchar(41) DEFAULT '' NOT NULL,
+    "real_ip" varchar(41) DEFAULT '' NOT NULL,
     "hostname" varchar(255) DEFAULT '' NOT NULL,
     "geoloc" varchar(255) DEFAULT '' NOT NULL,
     "tor" boolean NOT NULL DEFAULT FALSE
