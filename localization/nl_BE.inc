@@ -15,5 +15,5 @@ $labels['ip'] = 'IP adres';
 $labels['hostname'] = 'Naam';
 $labels['timestamp'] = 'Datum/Tijd';
 $labels['today'] = 'vandaag';
-$labels['yesterday'] = 'giteren';
+$labels['yesterday'] = 'gisteren';
 $labels['geoip_license'] = 'De hier weergegeven geografische gegevens zijn gebaseerd op GeoLite2 Free Databases gemaakt door MaxMind, beschikbaar via <a href="http://www.maxmind.com"> http://www.maxmind.com </a>.';
