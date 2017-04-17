@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Laatste sessie was op $date van IP adres $from $geo.';
+$messages['lastlogin'] = 'Laatste sessie was: $date van IP adres $from $geo.';
 $messages['noinfo']    = 'Geen informatie beschikbaar.';
 $messages['timeout']   = 'Bekijk de laatste sessie-informatie';
 
