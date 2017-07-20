@@ -1,18 +1,18 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Последний сессия была открыта $date с IP-адреса $from $geo.';
+$messages['lastlogin'] = 'Последняя сессия была открыта $date с IP-адреса $from $geo.';
 $messages['noinfo']    = 'Нет данных.';
-$messages['timeout']   = 'Показывать информацию о последней сессии';
+$messages['timeout']   = 'Показывать информацию о последней сессии при входе';
 
 $labels = array();
 $labels['section_title'] = 'Последний вход';
 $labels['info'] = 'Информация';
 $labels['conf'] = 'Настройки';
-$labels['fornseconds'] = 'за $n секунд';
+$labels['fornseconds'] = 'в течении $n секунд';
 $labels['recentactivity'] = 'Недавняя активность:';
 $labels['ip'] = 'IP адрес';
-$labels['hostname'] = 'Имя';
+$labels['hostname'] = 'Хост';
 $labels['timestamp'] = 'Дата/Время';
 $labels['today'] = 'сегодня';
 $labels['yesterday'] = 'вчера';
