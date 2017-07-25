@@ -58,6 +58,9 @@ Configuration
 
 See the `config.inc.php.dist` for more information.
 
+If you don't want the `lastlogin_timeout` setting to be overriden by the user, you can add it to your [`dont_override`][settings] settings.
+
+
 License
 ----------------------------------------
 
@@ -70,6 +73,7 @@ Comments and suggestions are welcome!
 
 Email: [Diana Soares][dsoares]
 
+[settings]: https://github.com/roundcube/roundcubemail/blob/master/config/defaults.inc.php#L363
 [rcplugrepo]: http://plugins.roundcube.net/packages/dsoares/lastlogin
 [releases]: http://github.com/JohnDoh/Roundcube-Plugin-Lastlogin/releases
 [geolocation]: http://plugins.roundcube.net/packages/dsoares/geolocation

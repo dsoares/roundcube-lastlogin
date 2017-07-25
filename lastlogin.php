@@ -226,7 +226,9 @@ class lastlogin extends rcube_plugin
     {
         if ($args['section'] == 'lastlogin_preferences') {
             $config = $this->rc->config->get('lastlogin', array());
-            $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
+            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
+                $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
+            }
             $args['prefs']['lastlogin'] = $config;
         }
 
@@ -260,21 +262,23 @@ class lastlogin extends rcube_plugin
                 'lastlogin_conf' => array('name' => rcube::Q($this->rc->gettext('conf', $domain))),
             );
 
-            // config
-            $info     = $this->get_info();
-            $field_id = 'rcmfd_lastlogin_timeout';
-            $value = intval($info['timeout']);
-            $input = new html_select(array('name' => '_lastlogin_timeout', 'id' => $field_id));
-            $input->add($this->rc->gettext('never'), '0');
+            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
+                // config
+                $info     = $this->get_info();
+                $field_id = 'rcmfd_lastlogin_timeout';
+                $value = intval($info['timeout']);
+                $input = new html_select(array('name' => '_lastlogin_timeout', 'id' => $field_id));
+                $input->add($this->rc->gettext('never'), '0');
 
-            foreach (array(5, 10, 15, 20) as $sec) {
-                $input->add($this->rc->gettext(array('name'=>'fornseconds', 'vars'=>array('n'=>$sec)), $domain), $sec);
+                foreach (array(5, 10, 15, 20) as $sec) {
+                    $input->add($this->rc->gettext(array('name'=>'fornseconds', 'vars'=>array('n'=>$sec)), $domain), $sec);
+                }
+
+                $blocks['lastlogin_conf']['options']['timeout'] = array(
+                    'title' => html::label($field_id, rcube::Q($this->rc->gettext('timeout', $domain))),
+                    'content' => $input->show($value),
+                );
             }
-
-            $blocks['lastlogin_conf']['options']['timeout'] = array(
-                'title' => html::label($field_id, rcube::Q($this->rc->gettext('timeout', $domain))),
-                'content' => $input->show($value),
-            );
 
             // info
             $msg = (!empty($info['from']) && !empty($info['date']))
