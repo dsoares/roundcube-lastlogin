@@ -3,7 +3,7 @@
     "type": "roundcube-plugin",
     "description": "Roundcube plugin to save and show user login information and login history.",
     "keywords": ["mail","login","history"],
-    "homepage": "https://github.com/dsoares/Roundcube-Plugin-Lastlogin",
+    "homepage": "https://github.com/dsoares/roundcube-lastlogin",
     "license": "GPL-3.0+",
     "version": "1.0.0",
     "authors": [

@@ -1,4 +1,4 @@
-# Roundcube Plugin Lastlogin
+# Roundcube plugin lastlogin
 
 Roundcube plugin to save and show user login information (user login history).
 
@@ -13,12 +13,12 @@ If using the [geolocation plugin][geolocation] (config option `lastlogin_geoloca
 
 The plugin provides a section in settings for the user to configure for how long (number of seconds) to show a notification with last access information on login.
 
-Stable versions of Lastlogin are available from the [Roundcube plugin repository][rcplugrepo] or the [releases section][releases] of the GitHub repository.
+Stable versions of this plugin are available from the [Roundcube plugin repository][rcplugrepo] or the [releases section][releases] of the GitHub repository.
 
 
 ## Requirements
 
-- [Roundcube Plugin Geolocation][geolocation] if the config option `lastlogin_geolocation` is `true` (default).
+- [geolocation plugin][geolocation] if the config option `lastlogin_geolocation` is `true` (default).
 - The option `log_logins` in Roundcube main configuration must be enabled to register the logins.
 
 
@@ -69,7 +69,7 @@ Don't forget to enable the lastlogin plugin within the main Roundcube configurat
 
 See the `config.inc.php.dist` for more information.
 
-If you don't want the `lastlogin_timeout` setting to be overriden by the user, you can add it to your Roundcube [`dont_override`] settings.
+If you don't want the `lastlogin_timeout` setting to be overriden by the user, you can add it to your Roundcube [`dont_override`][settings].
 
 
 ## License
@@ -84,7 +84,7 @@ Email: [Diana Soares][dsoares]
 
 [settings]: https://github.com/roundcube/roundcubemail/blob/master/config/defaults.inc.php#L363
 [rcplugrepo]: http://plugins.roundcube.net/packages/dsoares/lastlogin
-[releases]: http://github.com/JohnDoh/Roundcube-Plugin-Lastlogin/releases
+[releases]: http://github.com/dsoares/roundcube-lastlogin/releases
 [geolocation]: http://plugins.roundcube.net/packages/dsoares/geolocation
 [gpl]: http://www.gnu.org/licenses/gpl.html
 [dsoares]: mailto:diana.soares@gmail.com
