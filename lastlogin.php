@@ -31,7 +31,6 @@
 class lastlogin extends rcube_plugin
 {
     public $task = 'login|mail|settings';
-    private $timeout   = 10;
     private $log_table = 'userlogins';
     private $rc;
 
@@ -40,11 +39,12 @@ class lastlogin extends rcube_plugin
      */
     public function init()
     {
+        $this->load_config('config.inc.php.dist');
         $this->load_config();
         $this->add_texts('localization/');
         $this->rc = rcmail::get_instance();
 
-        if ($this->rc->config->get('lastlogin_geolocation', true)) {
+        if ($this->rc->config->get('lastlogin_geolocation')) {
             $this->require_plugin('geolocation');
         }
 
@@ -101,7 +101,7 @@ class lastlogin extends rcube_plugin
         $info = $this->rc->config->get('lastlogin', array());
 
         if (!isset($info['timeout'])) {
-            $info['timeout'] = $this->rc->config->get('lastlogin_timeout', $this->timeout);
+            $info['timeout'] = intval($this->rc->config->get('lastlogin_timeout'));
         }
 
         $info['more'] = $this->rc->url(array('_task'=>'settings', '_action'=>'lastlogin_preferences'));
@@ -131,7 +131,7 @@ class lastlogin extends rcube_plugin
             'geo'  => $this->get_geo($ip),
             'timeout' => (isset($info['timeout'])
                 ? $info['timeout']
-                : $this->rc->config->get('lastlogin_timeout', $this->timeout))
+                : intval($this->rc->config->get('lastlogin_timeout')))
         );
 
         $this->rc->user->save_prefs(array('lastlogin'=>$info));
@@ -184,7 +184,7 @@ class lastlogin extends rcube_plugin
         $sql = "SELECT CASE WHEN real_ip<>'' THEN real_ip ELSE ip END AS \"from\", hostname, ".
             $this->unixtimestamp('timestamp') . " AS \"date\", geoloc AS \"geo\" FROM " .
             $this->table_name() . " WHERE user_id = ? ORDER BY id DESC LIMIT " .
-            $this->rc->config->get('lastlogin_lastrecords', 10);
+            intval($this->rc->config->get('lastlogin_lastrecords'));
         $sth = $this->rc->db->query($sql,  $this->rc->user->ID);
 
         $rows = array();
@@ -367,7 +367,7 @@ class lastlogin extends rcube_plugin
      */
     private function get_dns($ip)
     {
-        if ($this->rc->config->get('lastlogin_dns', true)) {
+        if ($this->rc->config->get('lastlogin_dns')) {
             $dns = (intval($ip) ? gethostbyaddr($ip) : '');
             if ($dns != $ip) {
                 return $dns;
@@ -382,7 +382,7 @@ class lastlogin extends rcube_plugin
      */
     private function get_geo($ip)
     {
-        if (! $this->rc->config->get('lastlogin_geolocation', true)) {
+        if (! $this->rc->config->get('lastlogin_geolocation')) {
             return '';
         }
 
@@ -402,12 +402,12 @@ class lastlogin extends rcube_plugin
      */
     private function is_tor($ip)
     {
-        if ($this->rc->config->get('lastlogin_tor', true)) {
+        if ($this->rc->config->get('lastlogin_tor')) {
             $ip = $this->reverse_ip_octets($ip).
                 ".".$_SERVER['SERVER_PORT'].
                 ".".$this->reverse_ip_octets($_SERVER['SERVER_ADDR']).
-                $this->rc->config->get('lastlogin_tor_suffix', ".ip-port.exitlist.torproject.org");
-            $tor_ip = $this->rc->config->get('lastlogin_tor_ip', "127.0.0.2");
+                $this->rc->config->get('lastlogin_tor_suffix');
+            $tor_ip = $this->rc->config->get('lastlogin_tor_ip');
             return (gethostbyname($ip) == $tor_ip);
         }
         return false;
@@ -426,8 +426,6 @@ class lastlogin extends rcube_plugin
      */
     private function unixtimestamp($field)
     {
-        $ts = '';
-
         switch ($this->rc->db->db_provider) {
         case 'sqlite':
             $ts = ($field === 'NOW()') ? "strftime('%s', 'now')" : $field;
