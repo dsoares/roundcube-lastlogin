@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin_info'] = 'Остання сесія була відкрита на $date із IP-адреси  $from $geo.';
+$messages['lastlogin_info'] = 'Остання сесія була відкрита на $date із IP-адреси  $from $geo. <a href="$more">[+]</a>';
 $messages['noinfo'] = 'Інформація відсутня.';
 $messages['timeout'] = 'Показувати інформацію про останню сесію протягом';
 

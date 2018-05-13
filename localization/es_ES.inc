@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin_info'] = 'Último acceso ha sido $date desde la IP $from $geo.';
+$messages['lastlogin_info'] = 'Último acceso ha sido $date desde la IP $from $geo. <a href="$more">[+]</a>';
 $messages['noinfo'] = 'No hay información de acceso.';
 $messages['timeout'] = 'Mostrar la información de acceso.';
 

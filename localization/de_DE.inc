@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin_info'] = 'Letzte Anmeldung: $date von IP-Adresse $from $geo.';
+$messages['lastlogin_info'] = 'Letzte Anmeldung: $date von IP-Adresse $from $geo. <a href="$more">[+]</a>';
 $messages['noinfo'] = 'Keine Informationen vorhanden.';
 $messages['timeout'] = 'Zeige letzte Sitzungsinformationen';
 

@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin_info'] = 'Last open session was on $date from IP address $from $geo.';
+$messages['lastlogin_info'] = 'Last open session was on $date from IP address $from $geo. <a href="$more">[+]</a>';
 $messages['noinfo'] = 'No information available.';
 $messages['timeout'] = 'Show last session information';
 

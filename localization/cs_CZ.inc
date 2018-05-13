@@ -1,7 +1,7 @@
 <?php
 
 $messages = array();
-$messages['lastlogin_info'] = 'Poslední otevřená relace byla $date z IP adresy $from $geo.';
+$messages['lastlogin_info'] = 'Poslední otevřená relace byla $date z IP adresy $from $geo. <a href="$more">[+]</a>';
 $messages['noinfo'] = 'Nejsou k dispozici žádné informace.';
 $messages['timeout'] = 'Zobrazit informaci o poslední relaci';
 
