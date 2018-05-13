@@ -429,12 +429,12 @@ class lastlogin extends rcube_plugin
         $ts = '';
 
         switch ($this->rc->db->db_provider) {
+        case 'sqlite':
+            $ts = ($field === 'NOW()') ? "strftime('%s', 'now')" : $field;
+            break;
         case 'pgsql':
         case 'postgres':
             $ts = "EXTRACT (EPOCH FROM $field)";
-            break;
-        case 'sqlite':
-            $ts = "strftime('%s', $field)";
             break;
         default:
             $ts = "UNIX_TIMESTAMP($field)";
