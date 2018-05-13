@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Letzte Anmeldung: $date von IP-Adresse $from $geo.';
-$messages['noinfo']    = 'Keine Informationen vorhanden.';
-$messages['timeout']   = 'Zeige letzte Sitzungsinformationen';
+$messages['lastlogin_info'] = 'Letzte Anmeldung: $date von IP-Adresse $from $geo.';
+$messages['noinfo'] = 'Keine Informationen vorhanden.';
+$messages['timeout'] = 'Zeige letzte Sitzungsinformationen';
 
 $labels = array();
-$labels['section_title'] = 'Anmeldehistorie';
+$labels['lastlogin'] = 'Anmeldehistorie';
 $labels['info'] = 'Informationen';
 $labels['conf'] = 'Einstellungen';
 $labels['fornseconds'] = 'für $n Sekunden';

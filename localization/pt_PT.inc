@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'A &uacute;ltima sessão aberta foi $date a partir do endereço IP $from $geo.';
-$messages['noinfo']    = 'Sem informação disponível.';
-$messages['timeout']   = 'Mostrar informação da última sessão';
+$messages['lastlogin_info'] = 'A &uacute;ltima sessão aberta foi $date a partir do endereço IP $from $geo.';
+$messages['noinfo'] = 'Sem informação disponível.';
+$messages['timeout'] = 'Mostrar informação da última sessão';
 
 $labels = array();
-$labels['section_title'] = 'Último login';
+$labels['lastlogin'] = 'Último login';
 $labels['info'] = 'Informação';
 $labels['conf'] = 'Configuração';
 $labels['fornseconds'] = 'durante $n segundos';

@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Último acceso ha sido $date desde la IP $from $geo.';
-$messages['noinfo']    = 'No hay información de acceso.';
-$messages['timeout']   = 'Mostrar la información de acceso.';
+$messages['lastlogin_info'] = 'Último acceso ha sido $date desde la IP $from $geo.';
+$messages['noinfo'] = 'No hay información de acceso.';
+$messages['timeout'] = 'Mostrar la información de acceso.';
 
 $labels = array();
-$labels['section_title'] = 'Último acceso';
+$labels['lastlogin'] = 'Último acceso';
 $labels['info'] = 'Información';
 $labels['conf'] = 'Configurar';
 $labels['fornseconds'] = 'por $n segundos';

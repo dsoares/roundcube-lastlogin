@@ -8,7 +8,7 @@
  * @author Diana Soares
  * @requires geolocation
  *
- * Copyright (C) 2013 Diana Soares
+ * Copyright (C) 2013-2018 Diana Soares
  *
  * This program is a Roundcube (http://www.roundcube.net) plugin.
  * For more information see README.md.
@@ -52,12 +52,16 @@ class lastlogin extends rcube_plugin
         if (!$this->get_flag() && $this->rc->task == 'login' && $this->rc->action == 'login') {
             $this->add_hook('login_after', array($this, 'login_after'));
             $this->add_hook('write_log', array($this, 'write_log'));
-        } elseif ($this->get_flag() && $this->rc->task == 'mail') {
+        }
+        else if ($this->get_flag() && $this->rc->task == 'mail') {
             $this->add_hook('render_page', array($this, 'render_page'));
-        } elseif ($this->rc->task == 'settings') {
-            $this->add_hook('preferences_sections_list', array($this, 'preferences_section_list'));
+        }
+        else if ($this->rc->task == 'settings') {
             $this->add_hook('preferences_list', array($this, 'preferences_list'));
             $this->add_hook('preferences_save', array($this, 'preferences_save'));
+
+            $this->add_hook('settings_actions', array($this, 'settings_actions'));
+            $this->register_action('plugin.lastlogin', array($this, 'infostep'));
         }
     }
 
@@ -89,7 +93,7 @@ class lastlogin extends rcube_plugin
         $vars = $this->get_info();
 
         if (!empty($vars['from']) && !empty($vars['date']) && $vars['timeout'] > 0) {
-            $this->api->output->show_message('lastlogin.lastlogin', 'notice', $vars, false, $vars['timeout']);
+            $this->api->output->show_message('lastlogin.lastlogin_info', 'notice', $vars, false, $vars['timeout']);
         }
     }
 
@@ -104,7 +108,7 @@ class lastlogin extends rcube_plugin
             $info['timeout'] = intval($this->rc->config->get('lastlogin_timeout'));
         }
 
-        $info['more'] = $this->rc->url(array('_task'=>'settings', '_action'=>'lastlogin_preferences'));
+        $info['more'] = $this->rc->url(array('_task'=>'settings', '_action'=>'plugin.lastlogin'));
         $info['date'] = $this->_format_date($info['date']);
         $info['dns']  = $this->get_dns($info['from']);
 
@@ -139,8 +143,10 @@ class lastlogin extends rcube_plugin
 
     /**
      * Override userlogins log.
+     *
+     * @param array $args  array('name' => $name, 'date' => $date, 'line' => $line))
      */
-    public function write_log($args)  //array('name' => $name, 'date' => $date, 'line' => $line))
+    public function write_log($args)
     {
         // only log userlogins
         if ($args['name'] != 'userlogins') {
@@ -220,32 +226,48 @@ class lastlogin extends rcube_plugin
     }
 
     /**
-     * Save preferences.
+     * Add a tab to Settings.
      */
-    public function preferences_save($args)
+    public function settings_actions($args)
     {
-        if ($args['section'] == 'lastlogin_preferences') {
-            $config = $this->rc->config->get('lastlogin', array());
-            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
-                $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
-            }
-            $args['prefs']['lastlogin'] = $config;
-        }
+        $args['actions'][] = array(
+            'action' => 'plugin.lastlogin',
+            'class'  => 'lastlogin',
+            'label'  => 'lastlogin',
+            'domain' => 'lastlogin',
+        );
 
-        return($args);
+        return $args;
     }
 
     /**
-     * Add a section to the preferences section list.
+     * Lastlogin settings tab/menu entry.
      */
-    public function preferences_section_list($args)
+    public function infostep()
     {
-        $args['list']['lastlogin_preferences'] =
-            array(
-                'id' => 'lastlogin_preferences',
-                'section' => rcube::Q($this->gettext('section_title', 'Last login'))
-            );
-        return($args);
+        $this->register_handler('plugin.body', array($this, 'infohtml'));
+        $this->rc->output->set_pagetitle($this->gettext('lastlogin'));
+        $this->rc->output->send('plugin');
+    }
+
+    /**
+     * Settings tab content.
+     */
+    public function infohtml()
+    {
+        $this->include_stylesheet($this->local_skin_path()."/lastlogin.css");
+
+        $html = html::tag(
+            'fieldset', '',
+            html::tag('legend', null, $this->gettext('recentactivity')) .
+            $this->recentlogins()
+        );
+
+        return html::div(
+            array('class' => 'box formcontent lastlogin'),
+            html::div(array('class' => 'boxtitle'), $this->gettext('lastlogin')) .
+            html::div(array('class' => 'boxcontent propform'), $html)
+        );
     }
 
     /**
@@ -253,46 +275,45 @@ class lastlogin extends rcube_plugin
      */
     public function preferences_list($args)
     {
-        $this->include_stylesheet($this->local_skin_path()."/lastlogin.css");
+        if ($args['section'] == 'general' &&
+            !in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
 
-        if ($args['section'] == 'lastlogin_preferences') {
-            $domain = 'lastlogin';
-            $blocks = array(
-                'lastlogin_info' => array('name' => rcube::Q($this->rc->gettext('info', $domain))),
-                'lastlogin_conf' => array('name' => rcube::Q($this->rc->gettext('conf', $domain))),
-            );
+            $this->include_stylesheet($this->local_skin_path()."/lastlogin.css");
 
-            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
-                // config
-                $info     = $this->get_info();
-                $field_id = 'rcmfd_lastlogin_timeout';
-                $value = intval($info['timeout']);
-                $input = new html_select(array('name' => '_lastlogin_timeout', 'id' => $field_id));
-                $input->add($this->rc->gettext('never'), '0');
+            $field_id = 'rcmfd_lastlogin_timeout';
+            $info  = $this->get_info();
+            $value = intval($info['timeout']);
 
-                foreach (array(5, 10, 15, 20) as $sec) {
-                    $input->add($this->rc->gettext(array('name'=>'fornseconds', 'vars'=>array('n'=>$sec)), $domain), $sec);
-                }
+            $input = new html_select(array('name' => '_lastlogin_timeout', 'id' => $field_id));
+            $input->add($this->gettext('never'), '0');
 
-                $blocks['lastlogin_conf']['options']['timeout'] = array(
-                    'title' => html::label($field_id, rcube::Q($this->rc->gettext('timeout', $domain))),
-                    'content' => $input->show($value),
-                );
+            foreach (array(5, 10, 15, 20) as $sec) {
+                $input->add($this->gettext(array('name'=>'fornseconds', 'vars'=>array('n'=>$sec))), $sec);
             }
 
-            // info
-            $msg = (!empty($info['from']) && !empty($info['date']))
-                ? $this->rc->gettext(array('name'=>'lastlogin', 'vars'=>array_map(array('rcube', 'Q'), $info)), $domain)
-                : $this->rc->gettext('noinfo', $domain);
-            $msg = preg_replace('/\[.+\]/', '', $msg);
-
-            $blocks['lastlogin_info']['options'][] = array('content' => $this->recentlogins());
-
-            // end
-            $args['blocks'] = $blocks;
+            $args['blocks']['main']['options']['timeout'] = array(
+                'title' => html::label($field_id, $this->gettext('timeout')),
+                'content' => $input->show($value),
+            );
         }
 
-        return($args);
+        return $args;
+    }
+
+    /**
+     * Save preferences.
+     */
+    public function preferences_save($args)
+    {
+        if ($args['section'] == 'general') {
+            $config = $this->rc->config->get('lastlogin', array());
+            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
+                $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
+            }
+            $args['prefs']['lastlogin'] = $config;
+        }
+
+        return $args;
     }
 
     /**
@@ -300,9 +321,10 @@ class lastlogin extends rcube_plugin
      */
     public function recentlogins()
     {
-        $logs = $this->load_log();
-        $table = new html_table(array('cols'=>4, 'class'=>'lastlogin uibox records-table',
-            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4));
+        $table = new html_table(array(
+            'cols'=>4, 'class'=>'uibox records-table',
+            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4)
+        );
 
         foreach (array('timestamp', 'ip', 'hostname', 'location') as $k) {
             $table->add_header(
@@ -310,6 +332,8 @@ class lastlogin extends rcube_plugin
                 rcube::Q($this->gettext($k))
             );
         }
+
+        $logs = $this->load_log();
 
         foreach ($logs as $log) {
             $date = $this->_format_date($log['date']);
@@ -325,7 +349,7 @@ class lastlogin extends rcube_plugin
         }
 
         return
-            html::tag('p', null, rcube::Q($this->gettext('recentactivity'))) .
+            //html::tag('p', null, rcube::Q($this->gettext('recentactivity'))) .
             $table->show() .
             html::tag('p', 'license', $this->gettext('geoip_license'));
     }

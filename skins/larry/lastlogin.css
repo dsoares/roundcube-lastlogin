@@ -1,8 +1,4 @@
-TABLE.lastlogin {border-collapse:collapse;border:1px solid #bbd3da;}
-TABLE.lastlogin THEAD {background:#d6eaf3}
-TABLE.lastlogin TH, TABLE.lastlogin TD {padding:4px 8px;border:1px solid #bbd3da;white-space:nowrap;}
-TABLE.lastlogin TH {color:#69939e;text-overflow:ellipsis;text-align:left}
-TABLE.lastlogin TD {font-size:95%;border-style:dotted;}
-.lastlogin_info TABLE.propform TD {background:#fff}
-.lastlogin_info .license {color:#aaa;font-size:90%}
-.lastlogin_info .license a {color:#aaa}
+.lastlogin TABLE {border-collapse:collapse;border:1px solid #bbd3da}
+.lastlogin .records-table TBODY TD {padding:4px 8px;white-space:nowrap}
+.lastlogin .license {color:#aaa;font-size:90%}
+.lastlogin .license a {color:#aaa}

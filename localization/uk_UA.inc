@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Остання сесія була відкрита на $date із IP-адреси  $from $geo.';
-$messages['noinfo']    = 'Інформація відсутня.';
-$messages['timeout']   = 'Показувати інформацію про останню сесію протягом';
+$messages['lastlogin_info'] = 'Остання сесія була відкрита на $date із IP-адреси  $from $geo.';
+$messages['noinfo'] = 'Інформація відсутня.';
+$messages['timeout'] = 'Показувати інформацію про останню сесію протягом';
 
 $labels = array();
-$labels['section_title'] = 'Last login';
+$labels['lastlogin'] = 'Last login';
 $labels['info'] = 'Інформація';
 $labels['conf'] = 'Налаштування';
 $labels['fornseconds'] = ' $n секунд';

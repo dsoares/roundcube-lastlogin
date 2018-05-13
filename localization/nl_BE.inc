@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Laatste sessie was: $date van IP adres $from $geo.';
-$messages['noinfo']    = 'Geen informatie beschikbaar.';
-$messages['timeout']   = 'Bekijk de laatste sessie-informatie';
+$messages['lastlogin_info'] = 'Laatste sessie was: $date van IP adres $from $geo.';
+$messages['noinfo'] = 'Geen informatie beschikbaar.';
+$messages['timeout'] = 'Bekijk de laatste sessie-informatie';
 
 $labels = array();
-$labels['section_title'] = 'Laatste login';
+$labels['lastlogin'] = 'Laatste login';
 $labels['info'] = 'Informatie';
 $labels['conf'] = 'Instellingen';
 $labels['fornseconds'] = 'voor $n seconden';

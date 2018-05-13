@@ -1,12 +1,12 @@
 <?php
 
 $messages = array();
-$messages['lastlogin'] = 'Poslední otevřená relace byla $date z IP adresy $from $geo.';
-$messages['noinfo']    = 'Nejsou k dispozici žádné informace.';
-$messages['timeout']   = 'Zobrazit informaci o poslední relaci';
+$messages['lastlogin_info'] = 'Poslední otevřená relace byla $date z IP adresy $from $geo.';
+$messages['noinfo'] = 'Nejsou k dispozici žádné informace.';
+$messages['timeout'] = 'Zobrazit informaci o poslední relaci';
 
 $labels = array();
-$labels['section_title'] = 'Poslední přihlášení';
+$labels['lastlogin'] = 'Poslední přihlášení';
 $labels['info'] = 'Informace';
 $labels['conf'] = 'Nastavení';
 $labels['fornseconds'] = '$n sekund';
