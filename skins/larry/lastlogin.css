@@ -1,4 +1,15 @@
-.lastlogin TABLE {border-collapse:collapse;border:1px solid #bbd3da}
-.lastlogin .records-table TBODY TD {padding:4px 8px;white-space:nowrap}
-.lastlogin .license {color:#aaa;font-size:90%}
-.lastlogin .license a {color:#aaa}
+.lastlogin TABLE {
+	border-collapse:collapse;
+	border:1px solid #bbd3da;
+}
+.lastlogin .records-table TBODY TD {
+	padding:4px 8px;
+	white-space:nowrap;
+}
+.lastlogin .license {
+	color:#aaa;
+	font-size:90%;
+}
+.lastlogin .license a {
+	color:#aaa;
+}
