@@ -343,7 +343,7 @@ class lastlogin extends rcube_plugin
             //if ($dns != '') { $from .= " ($dns) "; }
 
             $table->add(array(), rcube::Q($date));
-            $table->add(array(), rcube::Q($from));
+            $table->add(array(), rcube::Q(preg_replace("/\.[0-9]{0,3}\.[0-9]{0,3}\./", ".*.*.", "$from")));
             $table->add(array(), rcube::Q($dns));
             $table->add(array(), rcube::Q($geo));
         }
