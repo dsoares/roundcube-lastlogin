@@ -1,6 +1,7 @@
 .lastlogin TABLE {
 	border-collapse:collapse;
-	border:1px solid #bbd3da;
+	border:1px solid #1b1b1b;
+	color: #1b1b1b;
 }
 .lastlogin .records-table TBODY TD {
 	padding:4px 8px;
