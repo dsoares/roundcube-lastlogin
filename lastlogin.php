@@ -339,18 +339,17 @@ class lastlogin extends rcube_plugin
             $date = $this->_format_date($log['date']);
             $geo  = $log['geo'];
             $dns  = $log['hostname'];
-            $from = $log['from'];
-            //if ($dns != '') { $from .= " ($dns) "; }
-
+            $from = ($this->rc->config->get('lastlogin_mask_ip', false)
+                ? preg_replace('/\.[0-9]{0,3}\.[0-9]{0,3}\./', '.*.*.', $log['from'])
+                : $log['from']
+            );
             $table->add(array(), rcube::Q($date));
             $table->add(array(), rcube::Q($from));
             $table->add(array(), rcube::Q($dns));
             $table->add(array(), rcube::Q($geo));
         }
 
-        return
-            //html::tag('p', null, rcube::Q($this->gettext('recentactivity'))) .
-            $table->show() .
+        return $table->show() .
             html::tag('p', 'license', $this->gettext('geoip_license'));
     }
 
