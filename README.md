@@ -67,6 +67,8 @@ Don't forget to enable the lastlogin plugin within the main Roundcube configurat
 
 - **$config['lastlogin_tor_ip']** - the TOR-network IP.
 
+- **$config['lastlogin_useragent']** - save the user-agent information?; default `false`.
+
 See the `config.inc.php.dist` for more information.
 
 If you don't want the `lastlogin_timeout` setting to be overriden by the user, you can add it to your Roundcube [`dont_override`][settings].
