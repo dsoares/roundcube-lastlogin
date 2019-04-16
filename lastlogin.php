@@ -8,7 +8,7 @@
  * @author Diana Soares
  * @requires geolocation
  *
- * Copyright (C) 2013-2018 Diana Soares
+ * Copyright (C) Diana Soares
  *
  * This program is a Roundcube (http://www.roundcube.net) plugin.
  * For more information see README.md.
