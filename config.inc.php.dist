@@ -24,5 +24,8 @@ $config['lastlogin_tor_suffix'] = ".ip-port.exitlist.torproject.org";
 // TOR-network IP
 $config['lastlogin_tor_ip'] = "127.0.0.2";
 
-// mask IP? (for GDPR)
+// Mask IP? (for GDPR)
 $config['lastlogin_mask_ip'] = false;
+
+// Save User-Agent information?
+$config['lastlogin_useragent'] = false;

@@ -17,3 +17,4 @@ $labels['timestamp'] = 'Date/Time';
 $labels['today'] = 'today';
 $labels['yesterday'] = 'yesterday';
 $labels['geoip_license'] = 'The geographic data provided here are based on GeoLite2 Free Databases created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.';
+$labels['ua'] = 'User Agent';

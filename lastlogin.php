@@ -61,7 +61,7 @@ class lastlogin extends rcube_plugin
             $this->add_hook('preferences_save', array($this, 'preferences_save'));
 
             $this->add_hook('settings_actions', array($this, 'settings_actions'));
-            $this->register_action('plugin.lastlogin', array($this, 'infostep'));
+            $this->register_action('plugin.lastlogin', array($this, 'show_more'));
         }
     }
 
@@ -167,13 +167,14 @@ class lastlogin extends rcube_plugin
         $geo = $this->get_geo($ip);
         $dns = $this->get_dns($ip);
         $tor = $this->is_tor($ip);
+        $ua  = ($this->rc->config->get('lastlogin_useragent', false) ? $_SERVER['HTTP_USER_AGENT'] : '');
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc".($tor?", tor":"").") ".
-            "VALUES (?, ?, ?, ?, ?, ?, ?".($tor?", TRUE":"").");";
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, ua".($tor?", tor":"").")".
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?".($tor?", TRUE":"").")";
 
         $ret = $this->rc->db->query($sql, $user_id, $username, $sess_id,
-            $ips['ip'], $ips['forwarded_ip'], $dns, $geo);
+            $ips['ip'], $ips['forwarded_ip'], $dns, $geo, $ua);
 
         if ($ret) {
             $args['abort'] = false;
@@ -187,11 +188,16 @@ class lastlogin extends rcube_plugin
      */
     public function load_log()
     {
-        $sql = "SELECT CASE WHEN real_ip<>'' THEN real_ip ELSE ip END AS \"from\", hostname, ".
-            $this->unixtimestamp('timestamp') . " AS \"date\", geoloc AS \"geo\" FROM " .
-            $this->table_name() . " WHERE user_id = ? ORDER BY id DESC LIMIT " .
-            intval($this->rc->config->get('lastlogin_lastrecords'));
-        $sth = $this->rc->db->query($sql,  $this->rc->user->ID);
+        $sth = $this->rc->db->limitquery(
+            "SELECT hostname, geoloc, ua"
+            .", CASE WHEN real_ip<>'' THEN real_ip ELSE ip END AS `from`"
+            .", " . $this->unixtimestamp('timestamp') . " AS `date`"
+            ." FROM " . $this->table_name()
+            ." WHERE user_id = ? "
+            ." ORDER BY id DESC ",
+            0, intval($this->rc->config->get('lastlogin_lastrecords')),
+            $this->rc->user->ID
+        );
 
         $rows = array();
         while ($res = $this->rc->db->fetch_assoc($sth)) {
@@ -243,7 +249,7 @@ class lastlogin extends rcube_plugin
     /**
      * Lastlogin settings tab/menu entry.
      */
-    public function infostep()
+    public function show_more()
     {
         $this->register_handler('plugin.body', array($this, 'infohtml'));
         $this->rc->output->set_pagetitle($this->gettext('lastlogin'));
@@ -259,8 +265,9 @@ class lastlogin extends rcube_plugin
 
         $html = html::tag(
             'fieldset', '',
-            html::tag('legend', null, $this->gettext('recentactivity')) .
-            $this->recentlogins()
+            html::tag('legend', null, $this->gettext('recentactivity'))
+            . $this->recentlogins()
+            . html::tag('p', 'license', $this->gettext('geoip_license'))
         );
 
         return html::div(
@@ -322,23 +329,22 @@ class lastlogin extends rcube_plugin
     public function recentlogins()
     {
         $table = new html_table(array(
-            'cols'=>4, 'class'=>'uibox records-table',
+            'cols'=>5, 'class'=>'uibox records-table',
             'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4)
         );
 
-        foreach (array('timestamp', 'ip', 'hostname', 'location') as $k) {
-            $table->add_header(
-                array('title' => rcube::Q($this->gettext($k))),
-                rcube::Q($this->gettext($k))
-            );
+        foreach (array('timestamp', 'ip', 'hostname', 'location', 'ua') as $key) {
+            $key = rcube::Q($this->gettext($key));
+            $table->add_header(array('title' => $key), $key);
         }
 
         $logs = $this->load_log();
 
         foreach ($logs as $log) {
             $date = $this->_format_date($log['date']);
-            $geo  = $log['geo'];
+            $geo  = $log['geoloc'];
             $dns  = $log['hostname'];
+            $ua   = $log['ua'];
             $from = ($this->rc->config->get('lastlogin_mask_ip', false)
                 ? preg_replace('/\.[0-9]{0,3}\.[0-9]{0,3}\./', '.*.*.', $log['from'])
                 : $log['from']
@@ -347,10 +353,10 @@ class lastlogin extends rcube_plugin
             $table->add(array(), rcube::Q($from));
             $table->add(array(), rcube::Q($dns));
             $table->add(array(), rcube::Q($geo));
+            $table->add(array('title' => rcube::Q($ua)), rcube::Q($ua));
         }
 
-        return $table->show() .
-            html::tag('p', 'license', $this->gettext('geoip_license'));
+        return $table->show();
     }
 
     /**

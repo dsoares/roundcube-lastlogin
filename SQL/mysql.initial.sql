@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `userlogins` (
   `hostname` varchar(255) NOT NULL DEFAULT '',
   `geoloc` varchar(255) NOT NULL DEFAULT '',
   `tor` tinyint(1) NOT NULL DEFAULT 0,
+  `ua` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   INDEX `user_id` (`user_id`)
 ) /*!40000 ENGINE=INNODB */ /*!40101 CHARACTER SET utf8 COLLATE utf8_general_ci */;
