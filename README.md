@@ -9,7 +9,7 @@ When a user logs in into Roundcube, this plugin:
 
 The login history may be consulted in its own Settings tab.
 
-If using the [geolocation plugin][geolocation] (config option `lastlogin_geolocation` is `true`) and you have some organization internal networks configured there, that information will be shown. For more information, see the [geolocation plugin][geolocation] configuration.
+If using the [geolocation plugin][geolocation] (config option `lastlogin_geolocation` is `true`) and you have some organization internal networks configured there, that information will be shown. Also, if using the [geolocation plugin][geolocation] with the `system` method, don't forget to enable the [PHP GeoIP extension][php_geoip]. For more information, see the [geolocation plugin][geolocation] configuration.
 
 The plugin provides a section in settings for the user to configure for how long (number of seconds) to show a notification with last access information on login.
 
@@ -90,5 +90,6 @@ Email: [Diana Soares][dsoares]
 [rcplugrepo]: http://plugins.roundcube.net/packages/dsoares/lastlogin
 [releases]: http://github.com/dsoares/roundcube-lastlogin/releases
 [geolocation]: http://plugins.roundcube.net/packages/dsoares/geolocation
+[php_geoip]: https://www.php.net/manual/en/book.geoip.php
 [gpl]: http://www.gnu.org/licenses/gpl.html
 [dsoares]: mailto:diana.soares@gmail.com
