@@ -4,7 +4,7 @@
  *
  * Roundcube plugin to provide information (IP, DNS, Geo) about the user last logins.
  *
- * @version 1.2.0
+ * @version 1.2.1
  * @author Diana Soares
  * @requires geolocation
  *
