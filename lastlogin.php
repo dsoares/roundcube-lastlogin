@@ -51,7 +51,7 @@ class lastlogin extends rcube_plugin
         // add hooks
         if (!$this->get_flag() && $this->rc->task == 'login' && $this->rc->action == 'login') {
             $this->add_hook('login_after', array($this, 'login_after'));
-            $this->add_hook('write_log', array($this, 'write_log'));
+            $this->add_hook('login_after', array($this, 'write_log'));
         }
         else if ($this->get_flag() && $this->rc->task == 'mail') {
             $this->add_hook('render_page', array($this, 'render_page'));
@@ -142,17 +142,10 @@ class lastlogin extends rcube_plugin
     }
 
     /**
-     * Override userlogins log.
-     *
-     * @param array $args  array('name' => $name, 'date' => $date, 'line' => $line))
+     * Insert login information into database on a successful login
      */
     public function write_log($args)
     {
-        // only log userlogins
-        if ($args['name'] != 'userlogins') {
-            return $args;
-        }
-
         $username = $this->rc->user->get_username('local');
         $user_id  = $this->rc->user->ID;
 
