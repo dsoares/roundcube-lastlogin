@@ -10,7 +10,7 @@ $config['lastlogin_timeout'] = 10;
 $config['lastlogin_lastrecords'] = 10;
 
 // Use geolocation plugin (boolean).
-$config['lastlogin_geolocation'] = true;
+$config['lastlogin_geolocation'] = false;
 
 // Resolve names with DNS (boolean).
 $config['lastlogin_dns'] = true;

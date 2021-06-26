@@ -18,7 +18,7 @@ Stable versions of this plugin are available from the [Roundcube plugin reposito
 
 ## Requirements
 
-- [geolocation plugin][geolocation] if the config option `lastlogin_geolocation` is `true` (default).
+- [geolocation plugin][geolocation] if the config option `lastlogin_geolocation` is `true` (default is `false`).
 - The option `log_logins` in Roundcube main configuration must be enabled to register the logins.
 
 
@@ -57,7 +57,7 @@ Don't forget to enable the lastlogin plugin within the main Roundcube configurat
 
 - **$config['lastlogin_lastrecords']** - number of history entries to show in the settings section; default `10`.
 
-- **$config['lastlogin_geolocation']** - use the geolocation plugin; default `true`.
+- **$config['lastlogin_geolocation']** - use the geolocation plugin; default `false`.
 
 - **$config['lastlogin_dns']** - also register IP DNS names; default `true`.
 
