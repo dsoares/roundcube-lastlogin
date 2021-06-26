@@ -7,7 +7,7 @@
  * @author   Diana Soares <diana.soares@gmail.com>
  * @license  GPL-3.0+
  * @requires geolocation
- * @version  1.2.0
+ * @version  1.3.0
  *
  * Copyright (C) Diana Soares
  *
