@@ -4,9 +4,10 @@
  *
  * Roundcube plugin to provide information (IP, DNS, Geo) about the user last logins.
  *
- * @version 1.2.0
- * @author Diana Soares
+ * @author   Diana Soares <diana.soares@gmail.com>
+ * @license  GPL-3.0+
  * @requires geolocation
+ * @version  1.2.0
  *
  * Copyright (C) Diana Soares
  *
@@ -52,11 +53,9 @@ class lastlogin extends rcube_plugin
         if (!$this->get_flag() && $this->rc->task == 'login' && $this->rc->action == 'login') {
             $this->add_hook('login_after', [$this, 'login_after']);
             $this->add_hook('login_after', [$this, 'write_log']);
-        }
-        else if ($this->get_flag() && $this->rc->task == 'mail') {
+        } elseif ($this->get_flag() && $this->rc->task == 'mail') {
             $this->add_hook('render_page', [$this, 'render_page']);
-        }
-        else if ($this->rc->task == 'settings') {
+        } elseif ($this->rc->task == 'settings') {
             $this->add_hook('preferences_list', [$this, 'preferences_list']);
             $this->add_hook('preferences_save', [$this, 'preferences_save']);
             $this->add_hook('settings_actions', [$this, 'settings_actions']);
@@ -162,11 +161,20 @@ class lastlogin extends rcube_plugin
         $ua  = ($this->rc->config->get('lastlogin_useragent', false) ? $_SERVER['HTTP_USER_AGENT'] : '');
 
         $sql = "INSERT INTO " . $this->table_name() .
-            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, ua".($tor?", tor":"").")".
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?".($tor?", TRUE":"").")";
+            "(user_id, username, sess_id, ip, real_ip, hostname, geoloc, ua".($tor ? ", tor" : "").")".
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?".($tor ? ", TRUE" : "").")";
 
-        $ret = $this->rc->db->query($sql, $user_id, $username, $sess_id,
-            $ips['ip'], $ips['forwarded_ip'], $dns, $geo, $ua);
+        $ret = $this->rc->db->query(
+            $sql,
+            $user_id,
+            $username,
+            $sess_id,
+            $ips['ip'],
+            $ips['forwarded_ip'],
+            $dns,
+            $geo,
+            $ua
+        );
 
         if ($ret) {
             $args['abort'] = false;
@@ -187,7 +195,8 @@ class lastlogin extends rcube_plugin
             ." FROM " . $this->table_name()
             ." WHERE user_id = ? "
             ." ORDER BY id DESC ",
-            0, intval($this->rc->config->get('lastlogin_lastrecords')),
+            0,
+            intval($this->rc->config->get('lastlogin_lastrecords')),
             $this->rc->user->ID
         );
 
@@ -256,7 +265,8 @@ class lastlogin extends rcube_plugin
         $this->include_stylesheet($this->local_skin_path()."/lastlogin.css");
 
         $html = html::tag(
-            'fieldset', '',
+            'fieldset',
+            '',
             html::tag('legend', null, $this->gettext('recentactivity'))
             . $this->recentlogins()
             . html::tag('p', 'license', $this->gettext('geoip_license'))
@@ -274,9 +284,9 @@ class lastlogin extends rcube_plugin
      */
     public function preferences_list($args)
     {
-        if ($args['section'] == 'general' &&
-            !in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
-
+        if ($args['section'] == 'general'
+            && !in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))
+        ) {
             $this->include_stylesheet($this->local_skin_path()."/lastlogin.css");
 
             $field_id = 'rcmfd_lastlogin_timeout';
@@ -306,8 +316,14 @@ class lastlogin extends rcube_plugin
     {
         if ($args['section'] == 'general') {
             $config = $this->rc->config->get('lastlogin', []);
-            if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
-                $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
+            $dont_override = (array) $this->rc->config->get('dont_override');
+            if (!in_array('lastlogin_timeout', $dont_override)) {
+                $config['timeout'] = intval(
+                    rcube_utils::get_input_value(
+                        '_lastlogin_timeout',
+                        rcube_utils::INPUT_POST
+                    )
+                );
             }
             $args['prefs']['lastlogin'] = $config;
         }
@@ -320,10 +336,10 @@ class lastlogin extends rcube_plugin
      */
     public function recentlogins()
     {
-        $table = new html_table([
-            'cols'=>5, 'class'=>'uibox records-table',
-            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4
-        ]);
+        $table = new html_table(
+            ['cols'=>5, 'class'=>'uibox records-table',
+            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4]
+        );
 
         foreach (['timestamp', 'ip', 'hostname', 'location', 'ua'] as $key) {
             $key = rcube::Q($this->gettext($key));
@@ -337,7 +353,8 @@ class lastlogin extends rcube_plugin
             $geo  = $log['geoloc'];
             $dns  = $log['hostname'];
             $ua   = $log['ua'];
-            $from = ($this->rc->config->get('lastlogin_mask_ip', false)
+            $from = (
+                $this->rc->config->get('lastlogin_mask_ip', false)
                 ? preg_replace('/\.[0-9]{0,3}\.[0-9]{0,3}\./', '.*.*.', $log['from'])
                 : $log['from']
             );
@@ -355,12 +372,17 @@ class lastlogin extends rcube_plugin
      * Returns remote IP address and forwarded addresses if found.
      * Based on roundcube rcube_utils::remote_ip().
      *
-     * @param string $mode  mode=(multiple|single)
+     * @param string $mode mode=(multiple|single)
+     *
      * @return array
      */
     private function remote_ip($mode='multiple')
     {
-        $ips = ['ip' => $_SERVER['REMOTE_ADDR'], 'real_ip' => '', 'forwarded_ip' => ''];
+        $ips = [
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'real_ip' => '',
+            'forwarded_ip' => ''
+        ];
 
         // append the NGINX X-Real-IP header, if set
         if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
@@ -468,14 +490,14 @@ class lastlogin extends rcube_plugin
     private function _format_date($date)
     {
         if ($date >= strtotime("today")) {
-            $weekday = preg_replace("//", "\\", ucfirst($this->gettext('today')));
+            $wday = preg_replace("//", "\\", ucfirst($this->gettext('today')));
         } elseif ($date >= strtotime("yesterday")) {
-            $weekday = preg_replace("//", "\\", ucfirst($this->gettext('yesterday')));
+            $wday = preg_replace("//", "\\", ucfirst($this->gettext('yesterday')));
         } else {
-            $weekday = 'l';
+            $wday = 'l';
         }
 
-        return $this->rc->format_date($date, "$weekday, d F Y, H:i");
+        return $this->rc->format_date($date, "$wday, d F Y, H:i");
     }
 
     /**
