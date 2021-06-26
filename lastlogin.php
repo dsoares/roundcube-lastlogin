@@ -50,18 +50,17 @@ class lastlogin extends rcube_plugin
 
         // add hooks
         if (!$this->get_flag() && $this->rc->task == 'login' && $this->rc->action == 'login') {
-            $this->add_hook('login_after', array($this, 'login_after'));
-            $this->add_hook('login_after', array($this, 'write_log'));
+            $this->add_hook('login_after', [$this, 'login_after']);
+            $this->add_hook('login_after', [$this, 'write_log']);
         }
         else if ($this->get_flag() && $this->rc->task == 'mail') {
-            $this->add_hook('render_page', array($this, 'render_page'));
+            $this->add_hook('render_page', [$this, 'render_page']);
         }
         else if ($this->rc->task == 'settings') {
-            $this->add_hook('preferences_list', array($this, 'preferences_list'));
-            $this->add_hook('preferences_save', array($this, 'preferences_save'));
-
-            $this->add_hook('settings_actions', array($this, 'settings_actions'));
-            $this->register_action('plugin.lastlogin', array($this, 'show_more'));
+            $this->add_hook('preferences_list', [$this, 'preferences_list']);
+            $this->add_hook('preferences_save', [$this, 'preferences_save']);
+            $this->add_hook('settings_actions', [$this, 'settings_actions']);
+            $this->register_action('plugin.lastlogin', [$this, 'show_more']);
         }
     }
 
@@ -102,13 +101,13 @@ class lastlogin extends rcube_plugin
      */
     public function get_info()
     {
-        $info = $this->rc->config->get('lastlogin', array());
+        $info = $this->rc->config->get('lastlogin', []);
 
         if (!isset($info['timeout'])) {
             $info['timeout'] = intval($this->rc->config->get('lastlogin_timeout'));
         }
 
-        $info['more'] = $this->rc->url(array('_task'=>'settings', '_action'=>'plugin.lastlogin'));
+        $info['more'] = $this->rc->url(['_task'=>'settings', '_action'=>'plugin.lastlogin']);
         $info['date'] = $this->_format_date($info['date']);
         $info['dns']  = $this->get_dns($info['from']);
 
@@ -128,17 +127,17 @@ class lastlogin extends rcube_plugin
     public function save_info()
     {
         $ip   = $this->remote_ip('single');
-        $info = $this->rc->config->get('lastlogin', array());
-        $info = array(
+        $info = $this->rc->config->get('lastlogin', []);
+        $info = [
             'from' => $ip,
             'date' => date('U'),
             'geo'  => $this->get_geo($ip),
             'timeout' => (isset($info['timeout'])
                 ? $info['timeout']
                 : intval($this->rc->config->get('lastlogin_timeout')))
-        );
+        ];
 
-        $this->rc->user->save_prefs(array('lastlogin'=>$info));
+        $this->rc->user->save_prefs(['lastlogin'=>$info]);
     }
 
     /**
@@ -192,7 +191,7 @@ class lastlogin extends rcube_plugin
             $this->rc->user->ID
         );
 
-        $rows = array();
+        $rows = [];
         while ($res = $this->rc->db->fetch_assoc($sth)) {
             $rows[] = $res;
         }
@@ -229,12 +228,12 @@ class lastlogin extends rcube_plugin
      */
     public function settings_actions($args)
     {
-        $args['actions'][] = array(
+        $args['actions'][] = [
             'action' => 'plugin.lastlogin',
             'class'  => 'lastlogin',
             'label'  => 'lastlogin',
             'domain' => 'lastlogin',
-        );
+        ];
 
         return $args;
     }
@@ -244,7 +243,7 @@ class lastlogin extends rcube_plugin
      */
     public function show_more()
     {
-        $this->register_handler('plugin.body', array($this, 'infohtml'));
+        $this->register_handler('plugin.body', [$this, 'infohtml']);
         $this->rc->output->set_pagetitle($this->gettext('lastlogin'));
         $this->rc->output->send('plugin');
     }
@@ -264,9 +263,9 @@ class lastlogin extends rcube_plugin
         );
 
         return html::div(
-            array('class' => 'box formcontent lastlogin'),
-            html::div(array('class' => 'boxtitle'), $this->gettext('lastlogin')) .
-            html::div(array('class' => 'boxcontent propform'), $html)
+            ['class' => 'box formcontent lastlogin'],
+            html::div(['class' => 'boxtitle'], $this->gettext('lastlogin')) .
+            html::div(['class' => 'boxcontent propform'], $html)
         );
     }
 
@@ -284,17 +283,17 @@ class lastlogin extends rcube_plugin
             $info  = $this->get_info();
             $value = intval($info['timeout']);
 
-            $input = new html_select(array('name' => '_lastlogin_timeout', 'id' => $field_id));
+            $input = new html_select(['name' => '_lastlogin_timeout', 'id' => $field_id]);
             $input->add($this->gettext('never'), '0');
 
-            foreach (array(5, 10, 15, 20) as $sec) {
-                $input->add($this->gettext(array('name'=>'fornseconds', 'vars'=>array('n'=>$sec))), $sec);
+            foreach ([5, 10, 15, 20] as $sec) {
+                $input->add($this->gettext(['name'=>'fornseconds', 'vars'=>['n'=>$sec]]), $sec);
             }
 
-            $args['blocks']['main']['options']['timeout'] = array(
+            $args['blocks']['main']['options']['timeout'] = [
                 'title' => html::label($field_id, $this->gettext('timeout')),
                 'content' => $input->show($value),
-            );
+            ];
         }
 
         return $args;
@@ -306,7 +305,7 @@ class lastlogin extends rcube_plugin
     public function preferences_save($args)
     {
         if ($args['section'] == 'general') {
-            $config = $this->rc->config->get('lastlogin', array());
+            $config = $this->rc->config->get('lastlogin', []);
             if (!in_array('lastlogin_timeout', (array)$this->rc->config->get('dont_override'))) {
                 $config['timeout'] = intval(rcube_utils::get_input_value('_lastlogin_timeout', rcube_utils::INPUT_POST));
             }
@@ -321,14 +320,14 @@ class lastlogin extends rcube_plugin
      */
     public function recentlogins()
     {
-        $table = new html_table(array(
+        $table = new html_table([
             'cols'=>5, 'class'=>'uibox records-table',
-            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4)
-        );
+            'border'=>1, 'cellspacing'=>0, 'cellpadding'=>4
+        ]);
 
-        foreach (array('timestamp', 'ip', 'hostname', 'location', 'ua') as $key) {
+        foreach (['timestamp', 'ip', 'hostname', 'location', 'ua'] as $key) {
             $key = rcube::Q($this->gettext($key));
-            $table->add_header(array('title' => $key), $key);
+            $table->add_header(['title' => $key], $key);
         }
 
         $logs = $this->load_log();
@@ -342,11 +341,11 @@ class lastlogin extends rcube_plugin
                 ? preg_replace('/\.[0-9]{0,3}\.[0-9]{0,3}\./', '.*.*.', $log['from'])
                 : $log['from']
             );
-            $table->add(array(), rcube::Q($date));
-            $table->add(array(), rcube::Q($from));
-            $table->add(array(), rcube::Q($dns));
-            $table->add(array(), rcube::Q($geo));
-            $table->add(array('title' => rcube::Q($ua)), rcube::Q($ua));
+            $table->add([], rcube::Q($date));
+            $table->add([], rcube::Q($from));
+            $table->add([], rcube::Q($dns));
+            $table->add([], rcube::Q($geo));
+            $table->add(['title' => rcube::Q($ua)], rcube::Q($ua));
         }
 
         return $table->show();
@@ -361,7 +360,7 @@ class lastlogin extends rcube_plugin
      */
     private function remote_ip($mode='multiple')
     {
-        $ips = array('ip' => $_SERVER['REMOTE_ADDR'], 'real_ip' => '', 'forwarded_ip' => '');
+        $ips = ['ip' => $_SERVER['REMOTE_ADDR'], 'real_ip' => '', 'forwarded_ip' => ''];
 
         // append the NGINX X-Real-IP header, if set
         if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
@@ -373,7 +372,7 @@ class lastlogin extends rcube_plugin
         }
         // if mode is single, return only one IP
         if ($mode == 'single') {
-            foreach (array('forwarded_ip', 'real_ip') as $k) {
+            foreach (['forwarded_ip', 'real_ip'] as $k) {
                 if ($ips[$k] != '') {
                     return $ips[$k];
                 }
