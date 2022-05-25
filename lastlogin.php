@@ -50,7 +50,7 @@ class lastlogin extends rcube_plugin
         }
 
         // add hooks
-        if (!$this->get_flag() && $this->rc->task == 'login' && $this->rc->action == 'login') {
+        if (!$this->get_flag() && $this->rc->task === 'login') {
             $this->add_hook('login_after', [$this, 'login_after']);
             $this->add_hook('login_after', [$this, 'write_log']);
         } elseif ($this->get_flag() && $this->rc->task == 'mail') {
