@@ -20,8 +20,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "roundcube/plugin-installer": ">=0.1.2",
+        "php": ">=8.2",
+        "roundcube/plugin-installer": ">=0.3.1",
         "dsoares/geolocation": ">=0.1"
     },
     "extra": {
