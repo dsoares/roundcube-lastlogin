@@ -213,7 +213,7 @@ class lastlogin extends rcube_plugin
      */
     private function get_flag()
     {
-        return $_SESSION['plugin.lastlogin.show_info'];
+        return $_SESSION['plugin.lastlogin.show_info'] ?? null;
     }
 
     /**
