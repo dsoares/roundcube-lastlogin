@@ -13,6 +13,6 @@ $labels['ip'] = 'Indirizzo IP';
 $labels['hostname'] = 'Nome';
 $labels['timestamp'] = 'Data/Ora';
 $labels['today'] = 'oggi';
-$labels['ieri'] = 'ieri';
+$labels['yesterday'] = 'ieri';
 $labels['geoip_license'] = 'I dati geografici forniti qui si basano sui database gratuiti GeoLite2 creati da MaxMind, disponibili su <a href="http://www.maxmind.com">http://www.maxmind. com</a>.';
 $labels['ua'] = 'User Agent';
